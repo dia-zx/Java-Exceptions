@@ -1,2 +1,5 @@
 # Java-Exceptions
-Exceptions in Java (GeekBrains)
+## Exceptions in Java (GeekBrains)
+
+---
+
