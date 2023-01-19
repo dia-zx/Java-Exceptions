@@ -2,6 +2,11 @@ package Task;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 /*
  * Напишите приложение, которое будет запрашивать у пользователя следующие данные в произвольном порядке, разделенные пробелом:
@@ -25,10 +30,42 @@ import java.io.PrintWriter;
  */
 public class Main {
     public static void main(String[] args) {
-        try{
-        PrintWriter printWriter = new PrintWriter("filename");
-        }catch(FileNotFoundException e){
+        user_input();
 
-        }
+        // try {
+        // PrintWriter printWriter = new PrintWriter("filename");
+        // } catch (FileNotFoundException e) {
+
+        // }
+    }
+
+    public static Map<String, List<Person>> user_input() {
+        Map<String, List<Person>> result;
+        result = new HashMap();
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("\nВведите данные пользователя, разделенные пробелом в произвольном порядке");
+            System.out.println("Пустая строка - завершение");
+            System.out.println("Фамилия Имя Отчество | дата рождения(dd.mm.yyyy) | номер телефона | пол (f, m):");
+            String input = scanner.nextLine();
+            if (input.equals(""))
+                break;
+            try {
+                Person person = Person.parce(input);
+                if (result.containsKey(person.second_name)) {
+                    result.get(person.second_name).add(person);
+                } else {
+                    result.put(person.second_name, new ArrayList<Person>());
+                    result.get(person.second_name).add(person);
+                }
+            } catch (Exception ex) {
+                System.out.println("Внимание! " + ex.getMessage());
+            }
+        } while (true);
+        return result;
+    }
+    
+    public static void save_persons(Map<String, List<Person>> map, string file_path) {
+
     }
 }
