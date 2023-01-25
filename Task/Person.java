@@ -16,7 +16,7 @@ public class Person {
 
         Person person = new Person();
         for (String string : lines) {
-            if (string.equals('m') || string.equals('f')) {
+            if (string.equals("m") || string.equals("f")) {
                 if (person.gender == null) {
                     person.gender = string;
                     continue;
@@ -91,4 +91,8 @@ public class Person {
         return;
     }
 
+    @Override
+    public String toString() {
+        return second_name + " " + name + " " + patronymic + " " + birthday + " " + phone + " " + gender;
+    }
 }

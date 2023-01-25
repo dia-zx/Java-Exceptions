@@ -1,7 +1,7 @@
 package Task;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,19 +30,29 @@ import java.util.Scanner;
  */
 public class Main {
     public static void main(String[] args) {
-        user_input();
+        //#region создание каталога для архива...
+        String path = "persons";
+        File f = new File(path);
+        try {
+            f.mkdir();
+        } catch (Exception e) {
+            System.out.println("Внимание! Ошибка создания каталога! " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+        //#endregion
 
-        // try {
-        // PrintWriter printWriter = new PrintWriter("filename");
-        // } catch (FileNotFoundException e) {
-
-        // }
+        save_persons(user_input(), path + "\\");
     }
 
+    /**
+     * Диалог с пользователем и наполнение словаря - коллекции персон.
+     * @return словарь - коллекция персон
+     */
     public static Map<String, List<Person>> user_input() {
         Map<String, List<Person>> result;
         result = new HashMap();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in, "866");
         do {
             System.out.println("\nВведите данные пользователя, разделенные пробелом в произвольном порядке");
             System.out.println("Пустая строка - завершение");
@@ -52,6 +62,8 @@ public class Main {
                 break;
             try {
                 Person person = Person.parce(input);
+                System.out.println("-----:" + input);
+                System.out.println("-----:" + person.toString());
                 if (result.containsKey(person.second_name)) {
                     result.get(person.second_name).add(person);
                 } else {
@@ -62,10 +74,41 @@ public class Main {
                 System.out.println("Внимание! " + ex.getMessage());
             }
         } while (true);
+        scanner.close();
         return result;
     }
-    
-    public static void save_persons(Map<String, List<Person>> map, string file_path) {
 
+    /**
+     * Запись в каталог персон в файлах с именем = Фамилии
+     * @param map коллекция (словарь) персон
+     * @param dir_path путь до каталога в котором будут размешены файлы персон
+     */
+    public static void save_persons(Map<String, List<Person>> map, String dir_path) {
+        for (List<Person> persons : map.values()) {
+            System.out.println("Запись в файл:" + persons.get(0).second_name);
+            File f = new File(dir_path + "\\" + persons.get(0).second_name);
+            FileWriter fileWriter = null;
+            try {
+                f.createNewFile();
+                fileWriter = new FileWriter(f, false);
+                for (Person person : persons) {
+                    System.out.println("Запись в файл:" + person.toString() + '\n');
+                    fileWriter.write(person.toString() + '\n');
+                
+                }
+                fileWriter.flush();
+            } catch (Exception e) {
+                System.out.println("Внимание! " + e.getMessage());
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    fileWriter.close();
+                } catch (Exception e) {
+                    System.out.println("Внимание! " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
